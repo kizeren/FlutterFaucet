@@ -19,6 +19,10 @@ limitations under the License.
 
 */
 
+
+
+
+
 $faucetaddy = "FAe5JVpn7Cyi2wGq9V9tDtHAdzREWLpvuv";
 $fmessage = "Here's your payout!  Don't forget, leave your wallet open for more FLT!";
 
@@ -27,6 +31,17 @@ chdir(dirname(__FILE__));
 
 // Include all settings and classes
 require_once('shared.inc.php');
+
+
+//Check for maintnence mode and set the field to one.
+$maint = $mysqli->query("SELECT * FROM maintenance");
+while ($row = $maint->fetch_array()) {
+    if ($row[0] == 0) {
+        $mysqli->query("UPDATE maintenance SET maint = 1");
+    }
+}
+
+
 
 // Begin log
 $log->logInfo("Starting payout cron...");
@@ -54,7 +69,7 @@ if (count($uPayout) > 0) {
 	foreach ($uPayout as $uData) {
 		$transaction_id = NULL;
 		$rpc_txid = NULL;
-		
+		$config['payout'] = mt_rand(1,30);
 		// Validate address against RPC
 		if ($bitcoin->validateaddress($uData['user_address'])) {
 		
@@ -65,6 +80,7 @@ if (count($uPayout) > 0) {
 				$log->logFatal('unable to mark transaction ' . $uData['id'] . ' as processed. ERROR: ' . $oFaucetpayout->getCronError());
 				$monitoring->endCronjob($cron_name, 'E0010', 1, true);
 			}
+
 			
 			// Create a new transaction in the table
 			if ($fTransaction->addTransaction($uData['id'], $config['payout'], 'Debit_MP', NULL, $uData['user_address'], NULL)) {
@@ -91,6 +107,7 @@ if (count($uPayout) > 0) {
 			// Log completion
 			$log->logInfo('Completed payout successfully for user ' . $uData['id'] . ' with IP ' . $uData['user_ip'] . ' and address ' . $uData['user_address']); 
                         $message = $bitcoin->smsgsend($faucetaddy, $uData['user_address'], $fmessage);
+
 		} else {
 			$log->logError('Failed to verify the coin address for user ' . $uData['id'] . ', skipping payout.');
 			$oFaucetpayout->setProcessed($uData['id']);
@@ -102,8 +119,9 @@ if (count($uPayout) > 0) {
 	$log->logFatal("Failed processing payment queue! ...Aborting...");
 	$monitoring->endCronjob($cron_name, 'E0050', 1, true);
 }
-
 $log->logInfo("Payout cron has finished successfully!");
+
+$log->logInfo("Starting referral payout.");
 
 // Cron cleanup and monitoring
 require_once('cron_end.inc.php');

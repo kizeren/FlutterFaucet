@@ -42,6 +42,25 @@ class Faucetpayout Extends Base {
     return $this->sqlError('E0050');
   }
   
+  public function getReferrals() {
+    $stmt = $this->mysqli->prepare("SELECT * FROM refferals");
+    if ($this->checkStmt($stmt) && $stmt->execute() && $result = $stmt->get_result())
+      return $result->fetch_all(MYSQLI_ASSOC);
+    return $this->sqlError('E0050');
+  }
+  public function getCountReferrals($account) {
+    $stmt = $this->mysqli->prepare("SELECT * FROM refferals  WHERE raddress = $account");
+    if ($this->checkStmt($stmt) && $stmt->execute() && $result = $stmt->get_result())
+      return $result->fetch_all(MYSQLI_ROW);
+    return $this->sqlError('E0050');
+  }
+
+
+
+
+
+
+
   /**
    * Mark a payout as processed
    * @param id int Payout ID

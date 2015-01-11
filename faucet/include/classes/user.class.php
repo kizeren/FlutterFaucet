@@ -8,7 +8,7 @@ class User extends Base {
   protected $table = 'accounts';
   private $userID = false;
   private $user = array();
-
+ 
   // get and set methods
   private function getHash($string) {
     return hash('sha256', $string.$this->salt);
@@ -229,6 +229,21 @@ class User extends Base {
     $this->debug->append("STA " . __METHOD__, 4);
     return $this->getSingle($userID, 'coin_address', 'id');
   }
+
+
+  public function generate_code($length) {
+    $data[] = array(1,2,3,4,5,6,7,8,9,0,'a','b','c','d','e','f');
+    $res = '';
+    for ($i=0;$i<$length;$i++)
+    {
+        $res .= $data[rand(0,count($data))];
+    }
+    return $this->$res;
+   }
+
+
+
+
 
   /**
    * Send e-mail to confirm a change for 2fa

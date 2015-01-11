@@ -31,5 +31,15 @@ $faucetusers->emptyTable();
 
 $log->logInfo("User Purge cron has finished successfully!");
 
+//Check for maintnence mode and set the field to zero.
+$maint = $mysqli->query("SELECT * FROM maintenance");
+while ($row = $maint->fetch_array()) {
+    if ($row[0] == 1) {
+        $mysqli->query("UPDATE maintenance SET maint = 0");
+    }
+}
+
+
+
 require_once('cron_end.inc.php');
 ?>

@@ -35,8 +35,8 @@ require_once('shared.inc.php');
 
 
 $host = 'localhost';
-$dbuser = 'localuser';
-$dbpass = 'password';
+$dbuser = 'root';
+$dbpass = 'smcbride';
 $database = 'water';
 
 

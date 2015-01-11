@@ -19,6 +19,9 @@ limitations under the License.
  */
 
 // Used for performance calculations
+
+
+
 $dStartTime = microtime(true);
 
 // This should be okay
@@ -96,6 +99,19 @@ if (!empty($action)) {
   $debug->append('Loading Page: ' . $page . ' -> ' . $arrPages[$page], 1);
   require_once(PAGES_DIR . '/' . $arrPages[$page]);
 }
+
+//Check for maintnence mode and set the field to zero.
+$maint = $mysqli->query("SELECT * FROM maintenance");
+while ($row = $maint->fetch_array()) {
+    if ($row[0] == 1) {
+    header("location:maintenance.html");
+
+    }
+}
+
+
+
+
 
 define('PAGE', $page);
 define('ACTION', $action);

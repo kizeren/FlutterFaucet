@@ -22,7 +22,6 @@ class Faucetusers extends Base {
 			$stmt = $this->mysqli->prepare("INSERT INTO $this->table (user_address, user_ip) VALUES (?,?)");
 			$stmt->bind_param('ss',$userAddress,$userIP);
 			$stmt->execute();    
-
 		        $_SESSION['POPUP'][] = array('CONTENT' => "Thank you for using our faucet, you can come back in 24 hours for more coin!", 'TYPE' => 'info');
 			return true;
 		} else {
@@ -71,11 +70,12 @@ class Faucetusers extends Base {
                 $msgb = "Thanks for letting us know who reffered you!";
                 $this->bitcoin->smsgsend($addy, $rAddress, $msga);
 
-
         }
 			$stmt = $this->mysqli->prepare("INSERT INTO refferals (uaddress, raddress) VALUES (?,?)");
 			$stmt->bind_param('ss',$uAddress,$rAddress);
-			$stmt->execute();    
+			$stmt->execute();
+
+
 	}
 	
 	public function checkUserIP($userIP) {
