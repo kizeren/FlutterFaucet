@@ -1,7 +1,7 @@
 **FlutterFaucet**
 ================
 
-Faucet based on openfaucet by Zen00 [https://github.com/Zen00/openfaucet](Zen00 OpenFaucet)
+Faucet based on openfaucet by Zen00 [https://github.com/Zen00/openfaucet]
 
 Modified for use with FlutterCoin.
 
